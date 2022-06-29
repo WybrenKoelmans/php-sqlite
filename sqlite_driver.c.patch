@@ -1,0 +1,13 @@
+diff --git a/ext/pdo_sqlite/sqlite_driver.c b/ext/pdo_sqlite/sqlite_driver.c
+index bdad23a581..37d2382183 100644
+--- a/ext/pdo_sqlite/sqlite_driver.c
++++ b/ext/pdo_sqlite/sqlite_driver.c
+@@ -828,6 +828,8 @@ static int pdo_sqlite_handle_factory(pdo_dbh_t *dbh, zval *driver_options) /* {{
+ 		goto cleanup;
+ 	}
+ 
++	sqlite3_enable_load_extension(H->db, 1);
++
+ 	if (PG(open_basedir) && *PG(open_basedir)) {
+ 		sqlite3_set_authorizer(H->db, authorizer, NULL);
+ 	}

@@ -1,0 +1,29 @@
+diff --git a/8.1/alpine3.16/fpm/Dockerfile b/8.1/alpine3.16/fpm/Dockerfile
+index 3bddbde3..af9dc3c7 100644
+--- a/8.1/alpine3.16/fpm/Dockerfile
++++ b/8.1/alpine3.16/fpm/Dockerfile
+@@ -88,6 +88,7 @@ RUN set -eux; \
+ 	apk del --no-network .fetch-deps
+ 
+ COPY docker-php-source /usr/local/bin/
++COPY sqlite_driver.c.patch /usr/src/php/sqlite_driver.c.patch
+ 
+ RUN set -eux; \
+ 	apk add --no-cache --virtual .build-deps \
+@@ -103,6 +104,7 @@ RUN set -eux; \
+ 		openssl-dev \
+ 		readline-dev \
+ 		sqlite-dev \
++		patch \
+ 	; \
+ 	\
+ # make sure musl's iconv doesn't get used (https://www.php.net/manual/en/intro.iconv.php)
+@@ -115,6 +117,8 @@ RUN set -eux; \
+ 	; \
+ 	docker-php-source extract; \
+ 	cd /usr/src/php; \
++	ls -la; \
++	patch -p4 ext/pdo_sqlite/sqlite_driver.c < sqlite_driver.c.patch; \
+ 	gnuArch="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)"; \
+ 	./configure \
+ 		--build="$gnuArch" \
